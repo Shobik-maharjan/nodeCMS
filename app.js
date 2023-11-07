@@ -18,8 +18,9 @@ app.set("view engine", "ejs");
 app.use(express.json()); // cT = application/json handle
 app.use(express.urlencoded({ extended: true })); // cT = application/x-www-form-urlencoded
 
-app.get("/", (req, res) => {
-  res.render("allBlogs.ejs");
+app.get("/", async (req, res) => {
+  const allBlogs = await blogs.findAll();
+  res.render("allBlogs.ejs", { blogs: allBlogs });
 });
 
 app.get("/addBlog", (req, res) => {
@@ -41,6 +42,8 @@ app.post("/addBlog", upload.single("image"), async (req, res) => {
   });
   res.send("BLog created successfully");
 });
+
+app.use(express.static("./uploads"));
 
 const PORT = process.env.PORT;
 
