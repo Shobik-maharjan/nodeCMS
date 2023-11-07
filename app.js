@@ -23,6 +23,35 @@ app.get("/", async (req, res) => {
   res.render("allBlogs.ejs", { blogs: allBlogs });
 });
 
+// get single Blog
+app.get("/blogs/:id", async (req, res) => {
+  const id = req.params.id;
+
+  // aako id ko data blogs table bata fetch/find garnu paryo
+  const blog = await blogs.findAll({
+    where: {
+      id: id,
+    },
+  });
+
+  // const blog = await blogs.findByPk(id);
+
+  console.log(blog);
+
+  res.render("singleBlog", { blog });
+});
+
+// delete blog
+app.get("/delete/:id", async (req, res) => {
+  const id = req.params.id;
+  await blogs.destroy({
+    where: {
+      id: id,
+    },
+  });
+  res.redirect("/");
+});
+
 app.get("/addBlog", (req, res) => {
   res.render("addBlog");
 });
@@ -40,7 +69,7 @@ app.post("/addBlog", upload.single("image"), async (req, res) => {
     description,
     imageUrl: req.file.filename,
   });
-  res.send("BLog created successfully");
+  res.redirect("/");
 });
 
 app.use(express.static("./uploads"));
