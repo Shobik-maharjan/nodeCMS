@@ -32,6 +32,11 @@
         padding: 10px;
         margin: 5px 0;
       }
+      input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin: 5px 0;
+      }
 
       textarea {
         width: 100%;
@@ -60,41 +65,33 @@
     </div>
 
     <div class="container">
-      <h2>Form Example</h2>
-      <form action="/addBlog" method="post" enctype="multipart/form-data">
-        <label for="title">Title:</label>
+      <h2>Register User</h2>
+      <form action="/register" method="post">
+        <label for="username">Username:</label>
         <input
           type="text"
-          id="title"
-          name="title"
-          placeholder="Enter the title"
+          id="username"
+          name="username"
+          placeholder="Enter the username"
         /><br />
 
-        <label for="image">Image URL:</label>
-        <input
-          type="file"
-          id="image"
-          name="image"
-          placeholder="Enter the image URL"
-        /><br />
-
-        <label for="subtitle">Subtitle:</label>
+        <label for="email">Email::</label>
         <input
           type="text"
-          id="subTitle"
-          name="subTitle"
-          placeholder="Enter the subtitle"
+          id="email"
+          name="email"
+          placeholder="Enter the Email URL"
         /><br />
 
-        <label for="description">Description:</label>
-        <textarea
-          id="description"
-          name="description"
-          placeholder="Enter the description"
-        ></textarea
-        ><br />
+        <label for="password">Password:</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Enter the Password"
+        /><br />
 
-        <input type="submit" value="Submit" />
+        <input type="submit" value="Register" />
       </form>
     </div>
 

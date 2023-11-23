@@ -1,5 +1,6 @@
 const express = require("express");
-const { blogs } = require("./model/index.js");
+const { blogs, users } = require("./model/index.js");
+const bcrypt = require("bcrypt");
 // requiring multerConfig
 const { multer, storage } = require("./middleware/multerConfig.js");
 const upload = multer({ storage: storage });
@@ -149,6 +150,16 @@ app.post("/edit/:id", upload.single("image"), async (req, res) => {
 // Register User
 app.get("/register", (req, res) => {
   res.render("register");
+});
+
+app.post("/register", async (req, res) => {
+  const { username, password, email } = req.body;
+  await users.create({
+    email,
+    username,
+    password: bcrypt.hashSync(password, 10),
+  });
+  res.send("User registered successfully");
 });
 
 app.use(express.static("./uploads"));
