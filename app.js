@@ -14,6 +14,8 @@ require("./model/index.js");
 // say nodejs that we are using ejs, set everything
 app.set("view engine", "ejs");
 
+const fs = require("fs");
+
 // telling nodejs to accept the incoming data(parsing data)
 app.use(express.json()); // cT = application/json handle
 app.use(express.urlencoded({ extended: true })); // cT = application/x-www-form-urlencoded
@@ -44,6 +46,21 @@ app.get("/blogs/:id", async (req, res) => {
 // delete blog
 app.get("/delete/:id", async (req, res) => {
   const id = req.params.id;
+  const blog = await blogs.findAll({
+    where: {
+      id: id,
+    },
+  });
+  const fileName = blog[0].imageUrl;
+  const lengthToCut = "http://localhost:3000".length;
+  const FileNameAfterCut = fileName.slice(lengthToCut);
+  fs.unlink("./uploads" + FileNameAfterCut, (err) => {
+    if (err) {
+      console.log("error occured", err);
+    } else {
+      console.log("file deleted successfully");
+    }
+  });
   await blogs.destroy({
     where: {
       id: id,
@@ -67,9 +84,71 @@ app.post("/addBlog", upload.single("image"), async (req, res) => {
     title,
     subTitle,
     description,
-    imageUrl: req.file.filename,
+    imageUrl: process.env.BACKEND_URL + req.file.filename,
   });
   res.redirect("/");
+});
+
+// edit blog FORM
+app.get("/edit/:id", async (req, res) => {
+  // find the blog with coming id
+  const id = req.params.id;
+  const blog = await blogs.findAll({
+    where: {
+      id: id,
+    },
+  });
+  res.render("editBlog", { blog: blog });
+});
+
+// edit form bata aako data handle
+app.post("/edit/:id", upload.single("image"), async (req, res) => {
+  const id = req.params.id;
+  const { title, subTitle, description } = req.body;
+  let fileName;
+  if (req.file) {
+    fileName = req.file.filename;
+  }
+  // old data
+  const oldData = await blogs.findAll({
+    where: {
+      id: id,
+    },
+  });
+  const oldFileName = oldData[0].imageUrl;
+  const lengthToCut = "http://localhost:3000/".length;
+  const oldFileNameAfterCut = oldFileName.slice(lengthToCut);
+
+  if (fileName) {
+    // delete old because naya aairaxa
+    fs.unlink("./uploads/" + oldFileNameAfterCut, (err) => {
+      if (err) {
+        console.log("error occured", err);
+      } else {
+        console.log("old File Deleted Successfully");
+      }
+    });
+  }
+
+  await blogs.update(
+    {
+      title,
+      subTitle,
+      description,
+      imageUrl: fileName ? process.env.BACKEND_URL + fileName : oldFileName,
+    },
+    {
+      where: {
+        id: id,
+      },
+    }
+  );
+  res.redirect("/blogs/" + id);
+});
+
+// Register User
+app.get("/register", (req, res) => {
+  res.render("register");
 });
 
 app.use(express.static("./uploads"));
