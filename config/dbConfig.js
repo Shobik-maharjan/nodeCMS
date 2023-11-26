@@ -1,8 +1,8 @@
 // FOR LOCAL ENVIRONMENT
 module.exports = {
-  HOST: "roundhouse.proxy.rlwy.net",
+  HOST: "viaduct.proxy.rlwy.net",
   USER: "root",
-  PASSWORD: "1G5CCf125GdEhf-D1625HbEbh5g4-gda",
+  PASSWORD: "agbHC4gBbFaeCAHf-AD-hfCA2B6dcbB2",
   DB: "railway",
   dialect: "mysql",
   pool: {
